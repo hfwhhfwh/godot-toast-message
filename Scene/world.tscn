@@ -23,7 +23,7 @@ custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="ToastItem2" parent="ToastLayer/Root/VBoxContainer" unique_id=1906407455 instance=ExtResource("1_emx41")]
+[node name="ToastItem" parent="ToastLayer/Root/VBoxContainer" unique_id=1906407455 instance=ExtResource("1_emx41")]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 8

@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="ToastMessage"
+run/main_scene="uid://day6iwrso0vwq"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+ToastManager="*uid://b5pfn8nefsvfu"
 
 [dotnet]
 

@@ -2,8 +2,13 @@
 class_name ToastItem
 extends PanelContainer
 
-var _label: Label
+@onready var _label: Label = %TextLabel3yb7r
+@onready var _color_rect_icon: PanelContainer = %PanelContainer8dnfj
+@onready var _color_rect_text: PanelContainer = %PanelContainer2ml0s
+
 var _text: String = ""
+var _color_icon: Color = Color("6eff9e")
+var _color_text: Color = Color("45e66a")
 
 @export var text: String:
 	get:
@@ -14,10 +19,36 @@ var _text: String = ""
 		if is_instance_valid(_label):
 			_label.text = _text
 
+@export var color_icon: Color = Color("6eff9e"):
+	get:
+		return _color_icon
+	set(value):
+		_color_icon = value
+		if is_instance_valid(_color_rect_icon):
+			set_stylebox_color(_color_rect_icon, _color_icon)
+
+@export var color_text: Color = Color("45e66a"):
+	get:
+		return _color_text
+	set(value):
+		_color_text = value
+		if is_instance_valid(_color_rect_text):
+			set_stylebox_color(_color_rect_text, _color_text)
+		
+
 func _ready() -> void:
 	# 使用 % 获取场景唯一节点，确保即使节点改名或移动层级也能找到
-	_label = get_node_or_null("%TextLabel3yb7r")
+	# _label = get_node_or_null("%TextLabel3yb7r")
 	
 	# 同步一次初始文本
 	if is_instance_valid(_label):
 		_label.text = _text
+		set_stylebox_color(_color_rect_icon, _color_icon)
+		set_stylebox_color(_color_rect_text, _color_text)
+		
+
+func set_stylebox_color(panel_container: PanelContainer, new_color: Color):
+	var style = panel_container.get_theme_stylebox("panel").duplicate()
+	if style is StyleBoxFlat:
+		style.bg_color = new_color
+		panel_container.add_theme_stylebox_override("panel", style)
