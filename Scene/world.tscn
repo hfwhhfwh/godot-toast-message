@@ -1,30 +1,6 @@
 [gd_scene format=3 uid="uid://day6iwrso0vwq"]
 
-[ext_resource type="PackedScene" uid="uid://d33y0c323wy8u" path="res://Scene/toast_item.tscn" id="1_emx41"]
+[ext_resource type="Script" uid="uid://dlyir12w4vq5p" path="res://Script/World.cs" id="1_emx41"]
 
 [node name="World" type="Node" unique_id=463034278]
-
-[node name="ToastLayer" type="CanvasLayer" parent="." unique_id=1301810733]
-
-[node name="Root" type="MarginContainer" parent="ToastLayer" unique_id=90882954]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ToastLayer/Root" unique_id=1453880274]
-custom_minimum_size = Vector2(600, 0)
-layout_mode = 2
-size_flags_horizontal = 8
-
-[node name="ToastItem" parent="ToastLayer/Root/VBoxContainer" unique_id=1906407455 instance=ExtResource("1_emx41")]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-size_flags_horizontal = 8
-text = "成功提示"
+script = ExtResource("1_emx41")
