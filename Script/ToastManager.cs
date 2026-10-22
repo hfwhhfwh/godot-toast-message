@@ -2,6 +2,13 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+public enum ToastColorPreset
+{
+    OK = 0,
+    Warning = 1,
+    Error = 2
+}
+
 public partial class ToastManager : Node
 {
     private const string ToastScenePath = "res://Scene/toast_item.tscn";
@@ -14,6 +21,14 @@ public partial class ToastManager : Node
     private readonly List<ToastEntry> _toasts = new();
     private PackedScene _toastScene;
     private Control _toastLayer;
+
+    private readonly Color _iconColorOk = new Color("6eff9e");
+    private readonly Color _textColorOk = new Color("45e66a");
+    private readonly Color _iconColorWarning = new Color("ffdc82");
+    private readonly Color _textColorWarning = new Color("ffc038");
+    private readonly Color _iconColorErr = new Color("ff8a73");
+    private readonly Color _textColorErr = new Color("ff5b4d");
+
 
     public static ToastManager Instance { get; private set; }
 
@@ -47,7 +62,8 @@ public partial class ToastManager : Node
     }
 
 
-    public void ShowToast(string text)
+    public void ShowToast(string text, 
+        ToastColorPreset preset = ToastColorPreset.OK, bool insertFirst = false)
     {
         if (_toastScene == null || _toastLayer == null)
         {
@@ -56,15 +72,33 @@ public partial class ToastManager : Node
         }
 
         Control toast = _toastScene.Instantiate<Control>();
+
+        (Color iconCol, Color textCol) = GetPresetColor(preset);
         toast.Set("text", text);
+        toast.Set("color_icon", iconCol);
+        toast.Set("color_text", textCol);
+
         _toastLayer.AddChild(toast);
 
         var entry = new ToastEntry(toast);
-        _toasts.Add(entry);
+
+        if(insertFirst) _toasts.Insert(0, entry);
+        else  _toasts.Add(entry);
 
         var viewportWidth = GetViewport().GetVisibleRect().Size.X;
-        toast.Position = new Vector2(viewportWidth + RightMargin, TopMargin);
+        toast.Position = new Vector2(viewportWidth, TopMargin);
         PrepareAndShowToast(entry);
+    }
+
+    private (Color IconCol, Color TextCol) GetPresetColor(ToastColorPreset preset)
+    {
+        return preset switch
+        {
+            ToastColorPreset.OK => (_iconColorOk, _textColorOk),
+            ToastColorPreset.Warning => (_iconColorWarning, _textColorWarning),
+            ToastColorPreset.Error => (_iconColorErr, _textColorErr),
+            _ => throw new NotImplementedException(),
+        };
     }
 
     private async void PrepareAndShowToast(ToastEntry entry)
@@ -99,7 +133,7 @@ public partial class ToastManager : Node
         _toasts.Remove(entry);
         ReflowToasts();
 
-        AnimateToX(entry, GetViewport().GetVisibleRect().Size.X + RightMargin);
+        AnimateToX(entry, GetViewport().GetVisibleRect().Size.X);
 
         await ToSignal(entry.HorizontalTween, Tween.SignalName.Finished);
         if (IsInstanceValid(entry.Toast))
@@ -108,6 +142,9 @@ public partial class ToastManager : Node
         }
     }
 
+    /// <summary>
+    /// 重新排列所有的Toast
+    /// </summary>
     private void ReflowToasts()
     {
         var targetY = TopMargin;
@@ -121,7 +158,7 @@ public partial class ToastManager : Node
                 toastHeight = 55.0f;
             }
 
-            if (entry.IsEntered)
+            if (entry.IsEntered || entry.IsEntering)
             {
                 entry.VerticalTween?.Kill();
                 entry.VerticalTween = CreateTween()
@@ -166,6 +203,8 @@ public partial class ToastManager : Node
             .SetEase(Tween.EaseType.Out);
         entry.HorizontalTween.TweenProperty(entry.Toast, "position:x", targetX, AnimationDuration);
 
+        entry.IsEntering = true;
+
         if (markEntered)
         {
             entry.HorizontalTween.TweenCallback(Callable.From(() =>
@@ -176,6 +215,7 @@ public partial class ToastManager : Node
                 }
 
                 entry.IsEntered = true;
+                entry.IsEntering = false;
                 ExpireToast(entry);
             }));
         }
@@ -185,6 +225,7 @@ public partial class ToastManager : Node
     {
         public Control Toast { get; }
         public bool IsMeasured { get; set; }
+        public bool IsEntering { get; set; } = false;
         public bool IsEntered { get; set; }
         public bool IsExiting { get; set; }
         public Tween HorizontalTween { get; set; }
