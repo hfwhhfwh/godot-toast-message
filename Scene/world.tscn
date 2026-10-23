@@ -3,11 +3,14 @@
 [ext_resource type="Script" uid="uid://dlyir12w4vq5p" path="res://Script/World.cs" id="1_emx41"]
 [ext_resource type="PackedScene" uid="uid://d33y0c323wy8u" path="res://Scene/toast_item.tscn" id="2_dlwip"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dlwip"]
+load_path = "res://.godot/imported/对勾.svg-35cca6720ecb3ed39d07041491d57e14.ctex"
+
 [node name="World" type="Node" unique_id=463034278]
 script = ExtResource("1_emx41")
 
 [node name="ToastItem" parent="." unique_id=485387182 instance=ExtResource("2_dlwip")]
-visible = false
 text = "哈哈哈哈哈"
 color_icon = Color(1, 0.5416666, 0.45, 1)
 color_text = Color(1, 0.35833335, 0.3, 1)
+icon = SubResource("CompressedTexture2D_dlwip")

@@ -29,7 +29,8 @@ custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_uyttc")
 
-[node name="Icon" type="TextureRect" parent="HBoxContainer/PanelContainer8dnfj" unique_id=1938121533]
+[node name="Icon8sn3k" type="TextureRect" parent="HBoxContainer/PanelContainer8dnfj" unique_id=1938121533]
+unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("1_jtesr")
 expand_mode = 1

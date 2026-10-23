@@ -5,10 +5,12 @@ extends PanelContainer
 @onready var _label: Label = %TextLabel3yb7r
 @onready var _color_rect_icon: PanelContainer = %PanelContainer8dnfj
 @onready var _color_rect_text: PanelContainer = %PanelContainer2ml0s
+@onready var icon_node: TextureRect = %Icon8sn3k
 
 var _text: String = ""
 var _color_icon: Color = Color("6eff9e")
 var _color_text: Color = Color("45e66a")
+var _icon: Texture
 
 @export var text: String:
 	get:
@@ -34,6 +36,14 @@ var _color_text: Color = Color("45e66a")
 		_color_text = value
 		if is_instance_valid(_color_rect_text):
 			set_stylebox_color(_color_rect_text, _color_text)
+
+@export var icon: Texture:
+	get:
+		return _icon
+	set(value):
+		_icon = value
+		if is_instance_valid(icon_node):
+			icon_node.texture = value
 		
 
 func _ready() -> void:
@@ -45,6 +55,9 @@ func _ready() -> void:
 		_label.text = _text
 		set_stylebox_color(_color_rect_icon, _color_icon)
 		set_stylebox_color(_color_rect_text, _color_text)
+	# 同步图标
+	if is_instance_valid(icon_node) and _icon != null:
+		icon_node.texture = _icon
 		
 
 func set_stylebox_color(panel_container: PanelContainer, new_color: Color):
